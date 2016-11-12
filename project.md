@@ -100,7 +100,7 @@ The decision tree generated from the model looks like below:
 
 ![](project_files/figure-markdown_strict/unnamed-chunk-11-1.png)
 
-Let us see the out of smaple error of this model
+Let us see the out of sample error of this model
 
     pred <- predict(mod,newtest)
     confusionMatrix(pred,newtest$classe) 
@@ -109,33 +109,35 @@ Let us see the out of smaple error of this model
     ## 
     ##           Reference
     ## Prediction    A    B    C    D    E
-    ##          A 1416  416  278  185  110
-    ##          B    7  202   24    3    5
-    ##          C   89  280  399   77  191
-    ##          D  152  240  325  611  159
-    ##          E   10    1    0   88  617
+    ##          A 1532  483  489  437  144
+    ##          B   24  392   31  173  142
+    ##          C  115  264  506  354  292
+    ##          D    0    0    0    0    0
+    ##          E    3    0    0    0  504
     ## 
     ## Overall Statistics
     ##                                           
-    ##                Accuracy : 0.5514          
-    ##                  95% CI : (0.5386, 0.5642)
+    ##                Accuracy : 0.4986          
+    ##                  95% CI : (0.4857, 0.5114)
     ##     No Information Rate : 0.2845          
     ##     P-Value [Acc > NIR] : < 2.2e-16       
     ##                                           
-    ##                   Kappa : 0.4259          
-    ##  Mcnemar's Test P-Value : < 2.2e-16       
+    ##                   Kappa : 0.3442          
+    ##  Mcnemar's Test P-Value : NA              
     ## 
     ## Statistics by Class:
     ## 
     ##                      Class: A Class: B Class: C Class: D Class: E
-    ## Sensitivity            0.8459  0.17735   0.3889   0.6338   0.5702
-    ## Specificity            0.7651  0.99178   0.8689   0.8220   0.9794
-    ## Pos Pred Value         0.5888  0.83817   0.3851   0.4109   0.8617
-    ## Neg Pred Value         0.9259  0.83398   0.8707   0.9197   0.9100
-    ## Prevalence             0.2845  0.19354   0.1743   0.1638   0.1839
-    ## Detection Rate         0.2406  0.03432   0.0678   0.1038   0.1048
-    ## Detection Prevalence   0.4087  0.04095   0.1760   0.2527   0.1217
-    ## Balanced Accuracy      0.8055  0.58457   0.6289   0.7279   0.7748
+    ## Sensitivity            0.9152  0.34416  0.49318   0.0000  0.46580
+    ## Specificity            0.6312  0.92204  0.78905   1.0000  0.99938
+    ## Pos Pred Value         0.4966  0.51444  0.33050      NaN  0.99408
+    ## Neg Pred Value         0.9493  0.85419  0.88057   0.8362  0.89253
+    ## Prevalence             0.2845  0.19354  0.17434   0.1638  0.18386
+    ## Detection Rate         0.2603  0.06661  0.08598   0.0000  0.08564
+    ## Detection Prevalence   0.5242  0.12948  0.26015   0.0000  0.08615
+    ## Balanced Accuracy      0.7732  0.63310  0.64111   0.5000  0.73259
+
+Out of sample error: 0.5014444
 
 #### 2. Random Forest(RF)
 
@@ -167,39 +169,41 @@ Let us see the out of smaple error for RF
     ## 
     ##           Reference
     ## Prediction    A    B    C    D    E
-    ##          A 1672    3    0    0    0
-    ##          B    2 1136    3    0    0
-    ##          C    0    0 1023    8    0
-    ##          D    0    0    0  956    0
+    ##          A 1672    0    0    0    0
+    ##          B    2 1139    1    0    0
+    ##          C    0    0 1024    8    0
+    ##          D    0    0    1  956    0
     ##          E    0    0    0    0 1082
     ## 
     ## Overall Statistics
     ##                                           
-    ##                Accuracy : 0.9973          
-    ##                  95% CI : (0.9956, 0.9984)
+    ##                Accuracy : 0.998           
+    ##                  95% CI : (0.9964, 0.9989)
     ##     No Information Rate : 0.2845          
     ##     P-Value [Acc > NIR] : < 2.2e-16       
     ##                                           
-    ##                   Kappa : 0.9966          
+    ##                   Kappa : 0.9974          
     ##  Mcnemar's Test P-Value : NA              
     ## 
     ## Statistics by Class:
     ## 
     ##                      Class: A Class: B Class: C Class: D Class: E
-    ## Sensitivity            0.9988   0.9974   0.9971   0.9917   1.0000
-    ## Specificity            0.9993   0.9989   0.9984   1.0000   1.0000
-    ## Pos Pred Value         0.9982   0.9956   0.9922   1.0000   1.0000
-    ## Neg Pred Value         0.9995   0.9994   0.9994   0.9984   1.0000
+    ## Sensitivity            0.9988   1.0000   0.9981   0.9917   1.0000
+    ## Specificity            1.0000   0.9994   0.9984   0.9998   1.0000
+    ## Pos Pred Value         1.0000   0.9974   0.9922   0.9990   1.0000
+    ## Neg Pred Value         0.9995   1.0000   0.9996   0.9984   1.0000
     ## Prevalence             0.2845   0.1935   0.1743   0.1638   0.1839
-    ## Detection Rate         0.2841   0.1930   0.1738   0.1624   0.1839
-    ## Detection Prevalence   0.2846   0.1939   0.1752   0.1624   0.1839
-    ## Balanced Accuracy      0.9990   0.9982   0.9977   0.9959   1.0000
+    ## Detection Rate         0.2841   0.1935   0.1740   0.1624   0.1839
+    ## Detection Prevalence   0.2841   0.1941   0.1754   0.1626   0.1839
+    ## Balanced Accuracy      0.9994   0.9997   0.9982   0.9957   1.0000
+
+Out of sample error: 0.0020391
 
 #### 3. Generalized Boosted Regression Model(GBM)
 
 Let us now try GBM as our prediction model. Please note we are not using
 cross validation here as it takes a very long time to run the model with
-cross validation. Those having latest configuration machines can icnlude
+cross validation. Those having latest configuration machines can include
 cross validation step.
 
     library(gbm)
@@ -221,7 +225,7 @@ cross validation step.
 
     mod2<-train(classe~.,method="gbm", data=newtrain) 
 
-Let us see the out of smaple error for GBM
+Let us see the out of sample error for GBM
 
     pred2 <- predict(mod2,newtest)
 
@@ -233,37 +237,39 @@ Let us see the out of smaple error for GBM
     ## 
     ##           Reference
     ## Prediction    A    B    C    D    E
-    ##          A 1655   35    0    2    1
-    ##          B   10 1077   24    4    5
-    ##          C    5   26  995   31    2
-    ##          D    3    0    7  927    5
-    ##          E    1    1    0    0 1069
+    ##          A 1652   25    0    1    0
+    ##          B   13 1091   23    4    7
+    ##          C    7   22  996   31    8
+    ##          D    1    0    6  925    5
+    ##          E    1    1    1    3 1062
     ## 
     ## Overall Statistics
     ##                                          
-    ##                Accuracy : 0.9725         
-    ##                  95% CI : (0.968, 0.9765)
+    ##                Accuracy : 0.973          
+    ##                  95% CI : (0.9685, 0.977)
     ##     No Information Rate : 0.2845         
     ##     P-Value [Acc > NIR] : < 2.2e-16      
     ##                                          
-    ##                   Kappa : 0.9652         
-    ##  Mcnemar's Test P-Value : 6.224e-07      
+    ##                   Kappa : 0.9658         
+    ##  Mcnemar's Test P-Value : 4.679e-06      
     ## 
     ## Statistics by Class:
     ## 
     ##                      Class: A Class: B Class: C Class: D Class: E
-    ## Sensitivity            0.9886   0.9456   0.9698   0.9616   0.9880
-    ## Specificity            0.9910   0.9909   0.9868   0.9970   0.9996
-    ## Pos Pred Value         0.9776   0.9616   0.9396   0.9841   0.9981
-    ## Neg Pred Value         0.9955   0.9870   0.9936   0.9925   0.9973
+    ## Sensitivity            0.9869   0.9579   0.9708   0.9595   0.9815
+    ## Specificity            0.9938   0.9901   0.9860   0.9976   0.9988
+    ## Pos Pred Value         0.9845   0.9587   0.9361   0.9872   0.9944
+    ## Neg Pred Value         0.9948   0.9899   0.9938   0.9921   0.9958
     ## Prevalence             0.2845   0.1935   0.1743   0.1638   0.1839
-    ## Detection Rate         0.2812   0.1830   0.1691   0.1575   0.1816
-    ## Detection Prevalence   0.2877   0.1903   0.1799   0.1601   0.1820
-    ## Balanced Accuracy      0.9898   0.9683   0.9783   0.9793   0.9938
+    ## Detection Rate         0.2807   0.1854   0.1692   0.1572   0.1805
+    ## Detection Prevalence   0.2851   0.1934   0.1808   0.1592   0.1815
+    ## Balanced Accuracy      0.9903   0.9740   0.9784   0.9786   0.9901
 
-From the above results, we observe, RF is giving us the best accuracy in
-terms of out os sample error. Hence, we are selecting RF as our model
-for prediction on the 20 observations shared with us.
+Out of sample error: 0.0270178
+
+From the above results, we observe, RF is giving us the best accuracy as
+it has minimum out of sample error. Hence, we are selecting RF as our
+model for prediction on the 20 observations shared with us.
 
 ### Test Set Prediction
 
