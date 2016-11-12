@@ -1,0 +1,128 @@
+---
+title: "Practical Machine Learning - Coursera Project"
+author: "Utkarsh Yadav"
+date: "12 November 2016"
+output: html_document
+---
+
+###Executive Summary
+In this project, the data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants has been used. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways.The goal of this project is to:  
+a) predict the manner in which they did the exercise by building a model  
+b) explain how cross validation has been used  
+c) find out expected out of sample rate  
+d) use the prediction model to predict 20 different test cases  
+
+###Data Import
+Here we assume that the required testing & training data has been downloaded & placed in the present working directory.
+```{r}
+train<-read.csv("pml-training.csv",na.strings=c("NA","")) #converting all missing values to NA
+dim(train)
+test<-read.csv("pml-testing.csv")
+dim(test)
+```
+
+###Data Pre-Processing
+Since some of the modelling techniques that we are going to deploy (like random forest) would require removal of missing values, we will first remove columns that contain NAs.
+```{r}
+train <- train[,sapply(train, function(x) sum(is.na(x))==0)]
+dim(train)
+```
+The column dimension reduces to 60 from 160. We further reduce the column dimension to 53 by removing first 7 columns like individual identifiers or timestamps.
+```{r}
+train<-train[,-c(1:7)]
+dim(train)
+```
+We apply same treatment to test set.
+```{r}
+test <- test[,sapply(test, function(x) sum(is.na(x))==0)]
+test<-test[,-c(1:7)]
+dim(test)
+```
+We would like to be sure that the columns in the train & test sets are absolutely same. We check the names of the columns in the reduced sets.
+```{r}
+which(names(train)!=names(test))
+```
+The only difference is the column number 53 i.e. column `r names(train)[53]` in train set & `r names(test)[53]` in test set, which is expected.
+
+###Data Preparation
+Now we use this train set to create new subsets for model training & testing purpose.
+```{r,results="hide"}
+library(caret)
+```
+
+```{r}
+inTrain<- createDataPartition(y=train$classe,p=0.7,list=FALSE)
+newtrain<- train[inTrain,]
+newtest <- train[-inTrain,]
+```
+
+###Prediction Model
+This is a classification problem & we are going to try the following models:  
+####1. CART  
+For the purpose of cross validation, we would be using 4-fold validation in order to get better estimate of in sample error rate:
+```{r,results="hide"}
+library(rpart)
+```
+
+```{r}
+mod <- train(classe~.,method="rpart", data=newtrain, trControl=trainControl(method="cv",number=4))
+```
+The decision tree generated from the model looks like below:
+```{r,results="hide"}
+library(rattle)
+```
+
+```{r,echo=FALSE}
+fancyRpartPlot(mod$finalModel)
+```
+
+Let us see the out of smaple error of this model
+```{r}
+pred <- predict(mod,newtest)
+confusionMatrix(pred,newtest$classe) 
+```
+
+####2. Random Forest(RF)
+We will now run RF as our model. We won't specify cross validation explicity here as RF inherently does cross validation while building the trees.
+```{r,results="hide"}
+library(randomForest)
+```
+
+```{r, eval=FALSE}
+mod1<-train(classe~.,method="rf", data=newtrain) 
+```
+
+```{r, echo=FALSE}
+load("rfmod.Rda")
+```
+Let us see the out of smaple error for RF
+```{r}
+pred1 <- predict(mod1,newtest)
+confusionMatrix(pred1,newtest$classe)
+```
+
+####3. Generalized Boosted Regression Model(GBM)
+Let us now try GBM as our prediction model. Please note we are not using cross validation here as it takes a very long time to run the model with cross validation. Those having latest configuration machines can icnlude cross validation step.
+```{r,results="hide"}
+library(gbm)
+```
+
+```{r, eval=FALSE}
+mod2<-train(classe~.,method="gbm", data=newtrain) 
+```
+
+```{r, echo=FALSE}
+load("gbmod.Rda")
+```
+Let us see the out of smaple error for GBM
+```{r}
+pred2 <- predict(mod2,newtest)
+confusionMatrix(pred2,newtest$classe)
+```
+From the above results, we observe, RF is giving us the best accuracy in terms of out os sample error. Hence, we are selecting RF as our model for prediction on the 20 observations shared with us.
+
+### Test Set Prediction
+```{r}
+pred3 <- predict(mod1,test)
+pred3
+```
